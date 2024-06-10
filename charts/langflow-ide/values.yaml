@@ -111,7 +111,7 @@ langflow:
     enabled: true
     port: 8080
     image:
-      repository: repository: langflow-ai/langflow-frontend
+      repository: langflow-ai/langflow-frontend
       pullPolicy: IfNotPresent
       tag: ""
     resources:
