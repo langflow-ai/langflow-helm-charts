@@ -1,9 +1,13 @@
 # LangFlow IDE chart
 
-Helm chart for LangFlow as IDE. Postgres is a dependent chart but optional.
+Helm chart for LangFlow as IDE.
 
 ## Quick start
 
+Install the chart:
+
 ```
-helm install langflow-ide ./langflow-ide -n langflow --create-namespace
+helm repo add datastax-langflow-charts https://datastax.github.io/langflow-charts
+helm repo update
+helm install langflow-ide datastax-langflow-charts/langflow-ide -n langflow --create-namespace
 ```
