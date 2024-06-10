@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: "ghcr.io/datastax/ragstack-ai-langflow-backend"
+  repository: "langflow-ai/langflow-backend"
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: ""
 
 downloadFlows:
   path: /app/flows
