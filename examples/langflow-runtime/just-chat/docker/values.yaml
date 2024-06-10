@@ -1,0 +1,8 @@
+image:
+  repository: "langflow-just-chat"
+  tag: latest
+
+downloadFlows:
+  path: /app/flows
+  flows:
+    - url: https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/langflow-runtime/just-chat/justchat.json      
