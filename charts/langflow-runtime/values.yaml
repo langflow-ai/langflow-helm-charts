@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: "langflow-ai/langflow-backend"
+  repository: "langflowai/langflow-backend"
   pullPolicy: IfNotPresent
   tag: ""
 

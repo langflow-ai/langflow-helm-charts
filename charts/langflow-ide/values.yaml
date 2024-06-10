@@ -92,7 +92,7 @@ langflow:
         fsType: "ext4"
         extraParams: {}
   image:
-    repository: langflow-ai/langflow-backend
+    repository: langflowai/langflow-backend
     pullPolicy: IfNotPresent
     tag: ""
   resources:
@@ -111,7 +111,7 @@ langflow:
     enabled: true
     port: 8080
     image:
-      repository: langflow-ai/langflow-frontend
+      repository: langflowai/langflow-frontend
       pullPolicy: IfNotPresent
       tag: ""
     resources:
