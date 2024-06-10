@@ -31,10 +31,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 7860
-
 ingress:
   enabled: false
   annotations: {}
@@ -60,57 +56,16 @@ default_storage:
   type: "gp2"
   fsType: "ext4"
 
-backendSts:
-  enabled: false
-
-langflow:
-  replicaCount: 1
-  command:
-    - langflow
-  args:
-    - run
-    - --host
-    - 0.0.0.0
-    - --backend-only
-    - --log-level
-    - info
-    - --workers
-    - "1"
-    - --port
-    - "7860"
+langflow: 
   backend:
-    port: 7860
-  database:
-    secretsEnabled: false
-    type: "sqlite"
-    size: "1Gi"
-    volumes:
-      storageClass:
-        provisioner: "kubernetes.io/aws-ebs"
-        type: "gp2"
-        fsType: "ext4"
-        extraParams: {}
-  image:
-    repository: langflowai/langflow-backend
-    pullPolicy: IfNotPresent
-    tag: ""
-  resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits:
-      cpu: 1000m
-      memory: 1.5Gi
-    requests:
-      cpu: 250m
-      memory: 768Mi
-
-  frontend:
-    enabled: true
-    port: 8080
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      port: 7860
+    backendOnly: true
+    numWorkers: 1
     image:
-      repository: langflowai/langflow-frontend
+      repository: langflowai/langflow-backend
       pullPolicy: IfNotPresent
       tag: ""
     resources:
@@ -120,20 +75,73 @@ langflow:
       requests:
         cpu: 250m
         memory: 768Mi
+    probe:
+      failureThreshold: 3
+      periodSeconds: 10
+      timeoutSeconds: 5
+      initialDelaySeconds: 5
+    env: []
+    nodeSelector: {}
 
-  nodeSelector: {}
 
-  tolerations: []
+    tolerations: []
 
-  affinity: {}
-  podAnnotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "9090"
-    prometheus.io/path: "/metrics"
+    affinity: {}
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9090"
+      prometheus.io/path: "/metrics"
 
-  podSecurityContext: {}
-    # fsGroup: 2000
+    podSecurityContext: {}
 
+
+    persistence:
+      enabled: false      
+      type: "disk"
+      # enable persistent volume with sqlite
+      volume:
+        size: "1Gi"
+        storageClass:  
+          provisioner: "kubernetes.io/aws-ebs"
+          type: "gp2"
+          fsType: "ext4"
+          extraParams: {}
+      
+  
+
+  frontend:
+    enabled: true
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      port: 80
+    image:
+      repository: langflowai/langflow-frontend
+      pullPolicy: IfNotPresent
+      tag: ""
+    image:
+      repository: langflowai/langflow-backend
+      pullPolicy: IfNotPresent
+      tag: ""
+    resources:
+      limits:
+        cpu: 250m
+        memory: 768Mi
+      requests:
+        cpu: 250m
+        memory: 768Mi
+    probe:
+      failureThreshold: 3
+      periodSeconds: 10
+      timeoutSeconds: 5
+      initialDelaySeconds: 5
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
+    podAnnotations: {}
+    podSecurityContext: {}
 
 secretProvider:
   enabled: false

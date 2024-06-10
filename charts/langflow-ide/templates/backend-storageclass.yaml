@@ -1,0 +1,30 @@
+{{- if and .Values.langflow.backend.persistence.enabled (eq .Values.langflow.backend.persistence.type "disk") }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: "{{ template "langflow.fullname" . }}-disk"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "langflow.name" . }}
+    chart: {{ template "langflow.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: "database"
+    cluster: {{ template "langflow.fullname" . }}
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+{{- if .Values.langflow.backend.persistence.volume.storageClass }}
+provisioner: {{ .Values.langflow.backend.persistence.volume.storageClass.provisioner }}
+parameters:
+  {{- if .Values.langflow.backend.persistence.volume.storageClass.type }}
+  type: {{ .Values.langflow.backend.persistence.volume.storageClass.type }}
+  {{- end }}
+  {{- if .Values.langflow.backend.persistence.volume.storageClass.fsType }}
+  fsType: {{ .Values.langflow.backend.persistence.volume.storageClass.fsType }}
+  {{- end }}
+  {{- if .Values.langflow.backend.persistence.volume.storageClass.extraParams }}
+{{ toYaml .Values.langflow.backend.persistence.volume.storageClass.extraParams | indent 2 }}
+  {{- end }}
+{{- end }}
+{{- end }}
