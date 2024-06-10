@@ -5,7 +5,6 @@
 postgresql:
   enabled: false
 
-environment: "dev"
 enableTls: false
 
 autoscaling:

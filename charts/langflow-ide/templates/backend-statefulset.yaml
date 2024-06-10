@@ -90,8 +90,6 @@ spec:
             timeoutSeconds: {{ .Values.langflow.backend.timeoutSeconds | default 5 }}
             failureThreshold: {{ .Values.langflow.backend.failureThreshold | default 2 }}   
           env:
-            - name: ENVIRONMENT 
-              value: "{{ .Values.environment | default "dev" }}"
             - name: DOMAIN
               value: "{{ .Values.domain | default "localhost" }}"
             {{- if and .Values.langflow.database .Values.langflow.database.secretsEnabled }}

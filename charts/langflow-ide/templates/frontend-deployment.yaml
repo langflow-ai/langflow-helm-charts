@@ -86,8 +86,6 @@ spec:
             timeoutSeconds: {{ .Values.langflow.frontend.timeoutSeconds | default 5 }}
             failureThreshold: {{ .Values.langflow.frontend.failureThreshold | default 2 }}
           env:
-            - name: ENVIRONMENT 
-              value: "{{ .Values.environment | default "dev" }}"
             - name: BACKEND_URL
               value: "http://{{ template "langflow.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.port | default 7860 }}"
           resources:
