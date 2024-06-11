@@ -1,0 +1,8 @@
+langflow:
+  backend:
+    sqlite:
+      volume:
+        storageClass:
+          provisioner: kubernetes.io/aws-ebs
+          type: gp2
+          fsType: ext4
