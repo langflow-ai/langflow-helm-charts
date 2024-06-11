@@ -1,17 +1,7 @@
-# Default values for langflow.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-postgresql:
-  enabled: false
-
-enableTls: false
-
-autoscaling:
-  enabled: false
-
 imagePullSecrets: []
+
 nameOverride: "langflow"
+# Override for the name of the helm deployment
 fullnameOverride: "langflow"
 
 serviceAccount:
@@ -22,14 +12,6 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 ingress:
   enabled: false
@@ -44,18 +26,6 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# Define the storage class for GCP storage
-# default_storage:
-#  provisioner: "kubernetes.io/gce-pd"
-#  type: "pd-standard"
-#  fsType: "ext4"
-#  extraParams: {}
-# Define the storage class for AWS storage
-default_storage:
-  provisioner: "kubernetes.io/aws-ebs"
-  type: "gp2"
-  fsType: "ext4"
-
 langflow: 
   backend:
     replicaCount: 1
@@ -69,12 +39,12 @@ langflow:
       pullPolicy: IfNotPresent
       tag: ""
     resources:
-      limits:
-        cpu: 1000m
-        memory: 1.5Gi
       requests:
-        cpu: 250m
-        memory: 768Mi
+        cpu: 0.5
+        memory: 1Gi
+      # limits:
+      #   cpu: 0.5
+      #   memory: 1Gi
     probe:
       failureThreshold: 3
       periodSeconds: 10
@@ -92,20 +62,52 @@ langflow:
       prometheus.io/port: "9090"
       prometheus.io/path: "/metrics"
 
+    securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
     podSecurityContext: {}
 
-
-    persistence:
-      enabled: false      
-      type: "disk"
-      # enable persistent volume with sqlite
+    sqlite:
+      enabled: true
       volume:
         size: "1Gi"
-        storageClass:  
-          provisioner: "kubernetes.io/aws-ebs"
-          type: "gp2"
-          fsType: "ext4"
-          extraParams: {}
+        existingStorageClassName: "default"
+        # If you want the chart to create storage classes, then don't set
+        # existingStorageClassName name and provide configuration values
+        # for the storage class. The settings vary based on cloud
+        # provider. Below are examples for AWS, GCP, and Azure.
+
+        # For AWS
+        # storageClass:
+        #  provisioner: kubernetes.io/aws-ebs
+        #  type: gp2
+        #  fsType: ext4
+        #  extraParams:
+        #     iopsPerGB: "10"
+
+        # For GCP
+        # storageClass:
+        #   provisioner: kubernetes.io/gce-pd
+        #   type: pd-ssd
+        #   fsType: ext4
+        #   extraParams:
+        #      replication-type: none
+
+        # For Azure
+        # storageClass:
+        #   provisioner: kubernetes.io/azure-disk
+        #   fsType: ext4
+        #   type: managed-premium
+        #   extraParams:
+        #     storageaccounttype: Premium_LRS
+        #     kind: Managed
+        #     cachingmode: ReadOnly
+        storageClass: {}
       
   
 
@@ -119,17 +121,13 @@ langflow:
       repository: langflowai/langflow-frontend
       pullPolicy: IfNotPresent
       tag: ""
-    image:
-      repository: langflowai/langflow-backend
-      pullPolicy: IfNotPresent
-      tag: ""
     resources:
-      limits:
-        cpu: 250m
-        memory: 768Mi
       requests:
-        cpu: 250m
-        memory: 768Mi
+        cpu: 0.3
+        memory: 512Mi
+      # limits:
+      #   cpu: 0.3
+      #   memory: 512Mi
     probe:
       failureThreshold: 3
       periodSeconds: 10
@@ -142,6 +140,16 @@ langflow:
     affinity: {}
     podAnnotations: {}
     podSecurityContext: {}
+    securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
 secretProvider:
+  enabled: false
+
+postgresql:
   enabled: false

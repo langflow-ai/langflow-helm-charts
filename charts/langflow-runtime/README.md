@@ -22,32 +22,35 @@ downloadFlows:
 
 ## Deploy the flow
 
-Install the chart:
+Install the chart (using option 1):
 
-```
+```bash
 helm repo add datastax-langflow-charts https://datastax.github.io/langflow-charts
 helm repo update
 helm install langflow-runtime datastax-langflow-charts/langflow-runtime \
     --set "downloadFlows.flows[0].uuid=4ca07770-c0e4-487c-ad42-77c6039ce02e" \
-    --set "downloadFlows.flows[0].url=https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/langflow-runtime/just-chat/justchat.json      " \
+    --set "downloadFlows.flows[0].url=https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/langflow-runtime/just-chat/justchat.json" \
     --set replicaCount=1
 ```
 
 Tunnel the service to localhost:
-```
+
+```bash
 kubectl port-forward svc/langflow-langflow-runtime 7860:7860
 ```
 
 Call the flow API endpoint:
-```
+```bash
 curl -X POST \
     "http://localhost:7860/api/v1/run/4ca07770-c0e4-487c-ad42-77c6039ce02e?stream=false" \
     -H 'Content-Type: application/json'\
-    -d '{"input_value": "message",
-    "output_type": "chat",
-    "input_type": "chat",
-    "tweaks": {
-  "ChatInput-1BPcY": {},
-  "ChatOutput-J1bsS": {}
-}}'
+    -d '{
+      "input_value": "message",
+      "output_type": "chat",
+      "input_type": "chat",
+      "tweaks": {
+          "ChatInput-1BPcY": {},
+          "ChatOutput-J1bsS": {}
+      }
+    }'
 ```

@@ -6,7 +6,7 @@ Helm chart for LangFlow as IDE.
 
 Install the chart:
 
-```
+```bash
 helm repo add datastax-langflow-charts https://datastax.github.io/langflow-charts
 helm repo update
 helm install langflow-ide datastax-langflow-charts/langflow-ide -n langflow --create-namespace

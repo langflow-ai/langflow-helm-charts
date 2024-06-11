@@ -36,11 +36,6 @@ spec:
       securityContext:
         {{- toYaml .Values.langflow.frontend.podSecurityContext | nindent 8 }}
       volumes:
-        {{- if .Values.enableTls }}
-        - name: certs
-          secret:
-            secretName: "{{ .Values.tlsSecretName }}"
-        {{- end }}
         {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
           csi:
@@ -60,11 +55,6 @@ spec:
               containerPort: {{ .Values.langflow.frontend.service.port }}
               protocol: TCP
           volumeMounts:
-            {{- if .Values.enableTls }}
-            - name: certs
-              readOnly: true
-              mountPath: /certs
-            {{- end }}
             {{- if .Values.secretProvider.enabled }}
             - name: secrets-store-inline
               mountPath: "/mnt/secrets"

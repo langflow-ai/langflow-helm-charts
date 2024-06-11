@@ -35,15 +35,8 @@ spec:
       serviceAccountName: {{ include "langflow.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.langflow.podSecurityContext | nindent 8 }}
-      {{- if or .Values.enableTls .Values.secretProvider.enabled }}
+      {{- if .Values.secretProvider.enabled }}
       volumes:
-      {{- end }}
-        {{- if .Values.enableTls }}
-        - name: certs
-          secret:
-            secretName: "{{ .Values.tlsSecretName }}"
-        {{- end }}
-        {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
           csi:
             driver: secrets-store.csi.k8s.io
@@ -66,20 +59,15 @@ spec:
             - name: http
               containerPort: {{ .Values.langflow.backend.service.port }}
               protocol: TCP
-          {{- if or (or .Values.enableTls .Values.secretProvider.enabled) (and .Values.langflow.backend.persistence.enabled (eq .Values.langflow.backend.persistence.type "sqlite")) }}
+          {{- if or .Values.secretProvider.enabled .Values.langflow.backend.sqlite.enabled }}
           volumeMounts:
           {{- end }}
-            {{- if .Values.enableTls }}
-            - name: certs
-              readOnly: true
-              mountPath: /certs
-            {{- end }}
             {{- if .Values.secretProvider.enabled }}
             - name: secrets-store-inline
               mountPath: "/mnt/secrets"
               readOnly: true
             {{- end }}
-            {{- if and .Values.langflow.backend.persistence.enabled (eq .Values.langflow.backend.persistence.type "sqlite") }}
+            {{- if .Values.langflow.backend.sqlite.enabled }}
             - name: data
               mountPath: /data
             {{- end }}
@@ -105,7 +93,7 @@ spec:
               value: "{{ .Values.langflow.backend.backendOnly }}"
             - name: LANGFLOW_NUM_WORKERS
               value: "{{ .Values.langflow.backend.numWorkers }}"
-            {{- if and .Values.langflow.backend.persistence.enabled (eq .Values.langflow.backend.persistence.type "sqlite") }}
+            {{- if .Values.langflow.backend.sqlite.enabled }}
             - name: LANGFLOW_DATABASE_URL
               value: "sqlite:////data/langflow.db"
             {{- end }}
@@ -127,7 +115,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if and .Values.langflow.backend.persistence.enabled (eq .Values.langflow.backend.persistence.type "sqlite") }}
+  {{- if .Values.langflow.backend.sqlite.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: data
@@ -135,6 +123,14 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: {{ .Values.langflow.backend.persistence.volume.size }}
-      storageClassName: "{{ template "langflow.fullname" . }}-disk"
+          storage: {{ .Values.langflow.backend.sqlite.volume.size }}
+      {{- if .Values.langflow.backend.sqlite.volume.existingStorageClassName }}
+      {{- if ne .Values.langflow.backend.sqlite.volume.existingStorageClassName "default"}}
+      storageClassName: "{{ .Values.zookeeper.volumes.data.existingStorageClassName }}"
+      {{- else }}
+      {{- end }}
+      {{- else }}
+      storageClassName: "{{ template "langflow.fullname" . }}-sqlite"
+      {{- end }}
+      
   {{- end }}
