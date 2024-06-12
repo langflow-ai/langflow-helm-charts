@@ -1,2 +1,3 @@
 charts/langflow-ide/charts
 **/Chart.lock
+.DS_Store
