@@ -79,6 +79,8 @@ spec:
           env:
             - name: BACKEND_URL
               value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.service.port }}"
+            - name: FRONTEND_PORT
+              value: "{{ .Values.langflow.frontend.service.port }}"
           resources:
             {{- toYaml .Values.langflow.frontend.resources | nindent 12 }}
       {{- with .Values.langflow.frontend.nodeSelector }}
