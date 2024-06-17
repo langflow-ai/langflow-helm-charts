@@ -76,6 +76,21 @@ langflow:
 
     podSecurityContext: {}
 
+    externalDatabase:
+      # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
+      enabled: false
+      driver: {}
+        # value: "postgresql"
+      port: {}
+      user: {}
+      password: {}
+        # valueFrom:                                                                                                                                                                                                                   │
+        #   secretKeyRef:                                                                                                                                                                                                              │
+        #    key: password                                                                                                                                                                                                            │
+        #    name: <secret-name>
+      database: {}
+
+
     sqlite:
       enabled: true
       volume:

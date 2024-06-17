@@ -54,6 +54,12 @@ spec:
           args:
             - >
               set -e &&
+              if [ -n "$LF_CHART_EXTERNALDB_DRIVER" ]; then
+                echo "LF_CHART_EXTERNALDB_DRIVER is set, using external database at $LF_CHART_EXTERNALDB_HOST" &&
+                export LANGFLOW_DATABASE_URL="$LF_CHART_EXTERNALDB_DRIVER://$LF_CHART_EXTERNALDB_USER:$LF_CHART_EXTERNALDB_PASSWORD@$LF_CHART_EXTERNALDB_HOST:$LF_CHART_EXTERNALDB_PORT/$LF_CHART_EXTERNALDB_DATABASE"
+              else
+                echo "LF_CHART_EXTERNALDB_DRIVER is not set, using SQLLite database"
+              fi &&
               langflow run --host 0.0.0.0 --port {{ .Values.langflow.backend.service.port }}
           ports:
             - name: http
@@ -99,6 +105,20 @@ spec:
             {{- end }}
             {{- with .Values.langflow.backend.env }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.langflow.backend.externalDatabase.enabled }}
+            - name: LF_CHART_EXTERNALDB_DRIVER
+            {{- toYaml .Values.langflow.backend.externalDatabase.driver | nindent 14 }}
+            - name: LF_CHART_EXTERNALDB_HOST
+            {{- toYaml .Values.langflow.backend.externalDatabase.host | nindent 14 }}
+            - name: LF_CHART_EXTERNALDB_PORT
+            {{- toYaml .Values.langflow.backend.externalDatabase.port | nindent 14 }}
+            - name: LF_CHART_EXTERNALDB_DATABASE
+            {{- toYaml .Values.langflow.backend.externalDatabase.database | nindent 14 }}
+            - name: LF_CHART_EXTERNALDB_USER
+            {{- toYaml .Values.langflow.backend.externalDatabase.user | nindent 14 }}
+            - name: LF_CHART_EXTERNALDB_PASSWORD
+            {{- toYaml .Values.langflow.backend.externalDatabase.password | nindent 14 }}
             {{- end }}
           resources:
             {{- toYaml .Values.langflow.backend.resources | nindent 12 }}
