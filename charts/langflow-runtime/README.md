@@ -1,6 +1,8 @@
 # LangFlow runtime chart
 
 Deploy LangFlow flows to Kubernetes with this Helm chart.
+Using a dedicated deployment for a set of flows is fundamental in production environments in order to have a granular resource control.
+
 
 ## Import a flow
 
@@ -53,4 +55,47 @@ curl -X POST \
           "ChatOutput-J1bsS": {}
       }
     }'
+```
+
+## Scale the flows
+
+In order to add more resources to the flows container, you could decide to scale:
+- Horizontally, by adding more replicas of the deployment
+- Vertically, by adding more cpu/memory resources to the deployment
+
+
+### Scale horizontally
+
+To scale horizontally you only need to modify the `replicaCount` parameter in the chart.
+
+```yaml
+helm install langflow-runtime langflow/langflow-runtime \
+    --set "downloadFlows.flows[0].uuid=4ca07770-c0e4-487c-ad42-77c6039ce02e" \
+    --set "downloadFlows.flows[0].url=https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/langflow-runtime/just-chat/justchat.json" \
+    --set replicaCount=5
+```
+
+### Scale vertically
+
+By default the deployment doesn't have any limits and it could consume all the node resources. 
+In order to limit the available resources, you can modify the `resources` value:
+
+```yaml
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+```
+
+
+To scale vertically you only need modify the `resources`
+
+```
+helm install langflow-runtime langflow/langflow-runtime \
+    --set "downloadFlows.flows[0].uuid=4ca07770-c0e4-487c-ad42-77c6039ce02e" \
+    --set "downloadFlows.flows[0].url=https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/langflow-runtime/just-chat/justchat.json" \
+    --set replicaCount=5
 ```
