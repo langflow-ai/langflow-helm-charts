@@ -48,8 +48,8 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.langflow.securityContext | nindent 12 }}
-          image: "{{ .Values.langflow.frontend.image.repository }}:{{ .Values.langflow.frontend.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.langflow.frontend.image.pullPolicy }}
+          image: "{{ .Values.langflow.frontend.image.repository }}:{{ .Values.langflow.frontend.image.tag | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.langflow.frontend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.langflow.frontend.service.port }}

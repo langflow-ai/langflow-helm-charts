@@ -1,0 +1,14 @@
+postgresql:
+  enabled: true
+  auth:
+    username: "langflow"
+    password: "langflow-postgres"
+    database: "langflow-db"
+
+langflow:
+  backend:
+    env:
+      - name: "LANGFLOW_DATABASE_URL"
+        value: "postgresql://langflow:langflow-postgres@langflow-ide-postgresql:5432/langflow-db"
+    sqlite:
+      enabled: false

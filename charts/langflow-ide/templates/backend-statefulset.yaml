@@ -43,13 +43,13 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: "{{- .Values.secretProvider.name }}"
-        {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.langflow.backend.securityContext | nindent 12 }}
-          image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.langflow.backend.image.pullPolicy }}
+          image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag  | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.langflow.backend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
           command: ["/bin/bash", "-c"]
           args:
             - >
@@ -97,9 +97,8 @@ spec:
             - name: LANGFLOW_DATABASE_URL
               value: "sqlite:////data/langflow.db"
             {{- end }}
-            {{- range $name, $value := .Values.langflow.backend.env }}
-            - name: {{ $name }}
-              value: {{ $value }}
+            {{- with .Values.langflow.backend.env }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           resources:
             {{- toYaml .Values.langflow.backend.resources | nindent 12 }}

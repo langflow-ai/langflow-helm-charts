@@ -27,6 +27,10 @@ ingress:
   #      - chart-example.local
 
 langflow: 
+  global: 
+    image:
+      pullPolicy: IfNotPresent
+      tag: ""
   backend:
     replicaCount: 1
     service:
