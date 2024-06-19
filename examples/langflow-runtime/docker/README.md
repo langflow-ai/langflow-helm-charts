@@ -14,9 +14,9 @@ docker push myuser/langflow-just-chat:1.0.0
 The use the runtime chart to deploy the application:
 
 ```bash
-helm repo add datastax-langflow-charts https://datastax.github.io/langflow-charts
+helm repo add langflow https://langflow-ai.github.io/langflow-helm-charts
 helm repo update
-helm install langflow-runtime datastax-langflow-charts/langflow-runtime \
+helm install langflow-runtime langflow/langflow-runtime \
     --set "image.repository=myuser/langflow-just-chat" \
     --set "image.tag=1.0.0" \
 ```
