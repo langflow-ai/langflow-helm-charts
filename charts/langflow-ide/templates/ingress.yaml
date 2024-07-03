@@ -28,8 +28,8 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: {{ . }}
-            pathType: Prefix  # You can change this to Exact or ImplementationSpecific if needed
+          - path: {{ .path | quote }}
+            pathType: {{ .pathType | default "Exact" | quote }}  # You can change this to Exact or ImplementationSpecific if needed
             backend:
               service:
                 name: {{ $fullName }}
