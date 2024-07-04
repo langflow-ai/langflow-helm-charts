@@ -145,7 +145,7 @@ spec:
           storage: {{ .Values.langflow.backend.sqlite.volume.size }}
       {{- if .Values.langflow.backend.sqlite.volume.existingStorageClassName }}
       {{- if ne .Values.langflow.backend.sqlite.volume.existingStorageClassName "default"}}
-      storageClassName: "{{ .Values.zookeeper.volumes.data.existingStorageClassName }}"
+      storageClassName: {{ .Values.langflow.backend.sqlite.volume.existingStorageClassName }}
       {{- else }}
       {{- end }}
       {{- else }}
