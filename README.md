@@ -1,13 +1,20 @@
-# LangFlow Kubernetes Helm Charts
+# Langflow Kubernetes Helm Charts
+
+<div class="column" align="middle">
+  <img alt="GitHub License" src="https://img.shields.io/github/license/langflow-ai/langflow-helm-charts">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/langflow-ai/langflow-helm-charts?filter=langflow-ide-*">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/langflow-ai/langflow-helm-charts?filter=langflow-runtime-*">
+</div>
+
 
 ## Charts
-- [LangFlow IDE](./charts/langflow-ide/): Full experience of LangFlow, optimized for prototyping and testing new flows. 
-- [LangFlow Runtime](./charts/langflow-runtime/): Productionize LangFlow flows as standalone services.
+- [LangFlow IDE](./charts/langflow-ide/): Full experience of Langflow, optimized for prototyping and testing new flows. 
+- [LangFlow Runtime](./charts/langflow-runtime/): Productionize Langflow flows as standalone services.
 
 
 ## Langflow IDE vs Runtime
 
-LangFlow offers two distinct Kubernetes charts for deployment: one for the Integrated Development Environment (IDE) and another for the Runtime environment. 
+Langflow offers two distinct Kubernetes charts for deployment: one for the Integrated Development Environment (IDE) and another for the Runtime environment. 
 This separation is designed to enhance security, optimize resource allocation, and streamline management. 
 Understanding the rationale behind these deployment options will help you make informed decisions about how to best deploy and manage your applications.
 
