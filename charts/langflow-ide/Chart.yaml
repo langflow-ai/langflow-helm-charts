@@ -4,7 +4,9 @@ description: Helm chart for Langflow IDE
 type: application
 version: 0.1.0
 appVersion: latest
-
+maintainers:
+  - name: Langflow
+    email: contact@langflow.org
 dependencies:
   - name: postgresql
     version: 15.x
