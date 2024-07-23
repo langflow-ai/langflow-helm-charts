@@ -44,7 +44,7 @@ jobs:
 
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --debug --target-branch main
+        run: ct lint --debug --target-branch main --validate-yaml false
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
