@@ -1,0 +1,13 @@
+downloadFlows:
+  flows:
+  - url: https://raw.githubusercontent.com/datastax/langflow-charts/main/examples/flows/basic-prompting-hello-world.json
+    endpoint: hello-world
+
+env:
+  - name: LANGFLOW_LOG_LEVEL
+    value: "INFO"
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: langflow-secrets
+        key: openai-key

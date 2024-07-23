@@ -44,10 +44,10 @@ securityContext: {}
 env:
   - name: LANGFLOW_LOG_LEVEL
     value: "INFO"
-#  - name: openai_key_var
+#  - name: OPENAI_API_KEY
 #    valueFrom:
 #      secretKeyRef:
-#        name: openai-key
+#        name: langflow-secrets
 #        key: openai-key
 
 

@@ -54,8 +54,9 @@ spec:
               set -e &&
               mkdir -p {{ .Values.downloadFlows.path }} &&
               {{- range .Values.downloadFlows.flows }}
-              echo "Downloading flows from {{ .url }}" &&
-              curl --fail -o {{ $.Values.downloadFlows.path }}/{{ .uuid | default (.url | sha256sum | trunc 8) }}.json \
+              {{- $targetFile := printf "%s/%s.json" $.Values.downloadFlows.path (.uuid | default (.url | sha256sum | trunc 8)) -}}
+              echo "Downloading flows from {{ .url }} to {{ $targetFile }}" &&
+              curl --fail -o '{{ $targetFile }}' \
                 {{- if .basicAuth }}
                 -u "{{ .basicAuth }}" \
                 {{- end }}
@@ -64,7 +65,10 @@ spec:
                 -H "{{ $key }}: {{ $value }}" \
                 {{- end }}
                 {{- end }}
-                {{ .url }} &&
+                '{{ .url }}' && 
+              {{- if .endpoint }}
+              python -c 'import json, sys;f = sys.argv[1]; data = json.load(open(f));data["endpoint_name"]="{{ .endpoint }}";json.dump(data, open(f, "w"))' '{{ $targetFile }}' &&
+              {{- end }}
               {{- end }}
               echo 'Flows downloaded' && 
               langflow run --backend-only --host 0.0.0.0 --port {{ .Values.service.port }}

@@ -26,8 +26,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-langflow: 
-  global: 
+langflow:
+  global:
     image:
       pullPolicy: IfNotPresent
       tag: ""
@@ -127,8 +127,6 @@ langflow:
         #     kind: Managed
         #     cachingmode: ReadOnly
         storageClass: {}
-      
-  
 
   frontend:
     enabled: true
