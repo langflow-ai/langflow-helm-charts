@@ -128,6 +128,12 @@ langflow:
         #     cachingmode: ReadOnly
         storageClass: {}
 
+    # autoLogin: true|false
+    # superuser: <superuser login>
+    # superuserPassword: <superuser password>
+    # secretKey: <encryption key, optional>
+    # newUserIsActive: true|false
+    
   frontend:
     enabled: true
     replicaCount: 1
