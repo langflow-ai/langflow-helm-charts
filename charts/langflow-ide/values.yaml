@@ -15,9 +15,14 @@ serviceAccount:
 
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"  # Specify the NGINX ingress controller
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Handle SSL redirection
+    nginx.ingress.kubernetes.io/rewrite-target: /  # Rewrite paths
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"  # Set body size limits
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"  # Use HTTP backend by default
   hosts:
     - host: chart-example.local
       paths: []
@@ -66,33 +71,42 @@ langflow:
       prometheus.io/port: "9090"
       prometheus.io/path: "/metrics"
 
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    securityContext:  # Container-specific security context
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000740000
+      seccompProfile:
+        type: RuntimeDefault
 
-    podSecurityContext: {}
+    podSecurityContext:
+      fsGroup: 1000740000
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 
     externalDatabase:
-      # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
-      enabled: false
-      driver: {}
-        # value: "postgresql"
-      port: {}
-      user: {}
-      password: {}
-        # valueFrom:                                                                                                                                                                                                                   │
-        #   secretKeyRef:                                                                                                                                                                                                              │
-        #    key: password                                                                                                                                                                                                            │
-        #    name: <secret-name>
-      database: {}
+      enabled: true
+      driver:
+        value: "postgresql"
+      host:
+        value: "langflow-ide-postgresql-service"
+      port:
+        value: "5432"
+      username:
+        value: "langflow"
+      password:
+        value: "langflow-postgres"
+      database:
+        value: "langflow-db"
+    tmpDir: "/data/tmp"
 
 
     sqlite:
-      enabled: true
+      enabled: false
       volume:
         size: "1Gi"
         existingStorageClassName: "default"
@@ -156,17 +170,30 @@ langflow:
 
     affinity: {}
     podAnnotations: {}
-    podSecurityContext: {}
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    securityContext:  # Container-specific security context
+      capabilities:
+        drop:
+          - ALL
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000740000
+      seccompProfile:
+        type: RuntimeDefault
+
+    podSecurityContext:
+      fsGroup: 1000740000
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 
 secretProvider:
   enabled: false
 
 postgresql:
-  enabled: false
+  enabled: true
+  fullnameOverride: "langflow-ide-postgresql-service"
+  auth:
+    username: "langflow"
+    password: "langflow-postgres"
+    database: "langflow-db"

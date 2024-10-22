@@ -36,6 +36,12 @@ spec:
       securityContext:
         {{- toYaml .Values.langflow.frontend.podSecurityContext | nindent 8 }}
       volumes:
+        - name: config-volume  # Mount ConfigMap as volume
+          configMap:
+            name: {{ include "langflow.fullname" . }}-nginx-config
+            items:
+              - key: default.conf
+                path: default.conf
         {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
           csi:
@@ -47,7 +53,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.langflow.securityContext | nindent 12 }}
+            {{- toYaml .Values.langflow.frontend.securityContext | nindent 12 }}
           image: "{{ .Values.langflow.frontend.image.repository }}:{{ .Values.langflow.frontend.image.tag | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.langflow.frontend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
           ports:
@@ -55,6 +61,9 @@ spec:
               containerPort: {{ .Values.langflow.frontend.service.port }}
               protocol: TCP
           volumeMounts:
+            - name: config-volume  # Mount the config from ConfigMap
+              mountPath: /etc/nginx/conf.d/default.conf  # Specific file path
+              subPath: default.conf
             {{- if .Values.secretProvider.enabled }}
             - name: secrets-store-inline
               mountPath: "/mnt/secrets"
