@@ -53,7 +53,7 @@ langflow:
       failureThreshold: 3
       periodSeconds: 10
       timeoutSeconds: 5
-      initialDelaySeconds: 5
+      initialDelaySeconds: 35
     env: []
     nodeSelector: {}
 
