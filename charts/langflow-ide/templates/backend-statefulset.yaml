@@ -132,6 +132,13 @@ spec:
             - name: LANGFLOW_NEW_USER_IS_ACTIVE
               value: "{{ .Values.langflow.backend.newUserIsActive | default "False" }}"
             {{- end }}
+            {{- if gt (int .Values.langflow.backend.replicaCount) 1 }}
+            - name: LANGFLOW_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "langflow.fullname" . }}
+                  key: SECRET_KEY
+            {{- end }}
           resources:
             {{- toYaml .Values.langflow.backend.resources | nindent 12 }}
       {{- with .Values.langflow.backend.nodeSelector }}
