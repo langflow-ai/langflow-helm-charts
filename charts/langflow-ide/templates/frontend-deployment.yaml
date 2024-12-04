@@ -47,7 +47,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.langflow.securityContext | nindent 12 }}
+            {{- toYaml .Values.langflow.frontend.securityContext | nindent 12 }}
           image: "{{ .Values.langflow.frontend.image.repository }}:{{ .Values.langflow.frontend.image.tag | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.langflow.frontend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
           ports:
@@ -67,7 +67,7 @@ spec:
             initialDelaySeconds: {{ .Values.langflow.frontend.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.langflow.frontend.probe.periodSeconds }}
             timeoutSeconds: {{ .Values.langflow.frontend.probe.timeoutSeconds }}
-            failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}   
+            failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /index.html
@@ -75,7 +75,7 @@ spec:
             initialDelaySeconds: {{ .Values.langflow.frontend.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.langflow.frontend.probe.periodSeconds }}
             timeoutSeconds: {{ .Values.langflow.frontend.probe.timeoutSeconds }}
-            failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}   
+            failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}
           env:
             - name: BACKEND_URL
               value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.service.port }}"

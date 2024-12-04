@@ -66,15 +66,23 @@ langflow:
       prometheus.io/port: "9090"
       prometheus.io/path: "/metrics"
 
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
 
-    podSecurityContext: {}
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
+
 
     externalDatabase:
       # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
@@ -133,7 +141,7 @@ langflow:
     # superuserPassword: <superuser password>
     # secretKey: <encryption key, optional>
     # newUserIsActive: true|false
-    
+
   frontend:
     enabled: true
     replicaCount: 1
@@ -162,14 +170,23 @@ langflow:
 
     affinity: {}
     podAnnotations: {}
-    podSecurityContext: {}
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
+
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
 
 secretProvider:
   enabled: false
