@@ -26,11 +26,27 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  allowPrivilegeEscalation: false
+  runAsGroup: 1000
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsNonRoot: true
+  runAsGroup: 1000
+
+
 langflow:
   global:
     image:
-      pullPolicy: IfNotPresent
-      tag: ""
+      tag: "latest" 
   backend:
     replicaCount: 1
     service:
@@ -39,9 +55,9 @@ langflow:
     backendOnly: true
     numWorkers: 1
     image:
-      repository: langflowai/langflow-backend
-      pullPolicy: IfNotPresent
-      tag: ""
+      repository: jordanrfrazier/lfopenshift
+      imagePullPolicy: Always
+      tag: "v1.1"
     resources:
       requests:
         cpu: 0.5
@@ -56,25 +72,28 @@ langflow:
       initialDelaySeconds: 5
     env: []
     nodeSelector: {}
-
-
     tolerations: []
-
     affinity: {}
     podAnnotations:
       prometheus.io/scrape: "true"
-      prometheus.io/port: "9090"
+      prometheus.io/port: 9090
       prometheus.io/path: "/metrics"
 
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      allowPrivilegeEscalation: false
+      runAsGroup: 1000
 
-    podSecurityContext: {}
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
 
     externalDatabase:
       # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
@@ -90,6 +109,29 @@ langflow:
         #    name: <secret-name>
       database: {}
 
+    volumes:
+      - name: flows
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: data
+        emptyDir: {}
+      - name: db
+        emptyDir: {}
+
+    volumeMounts:
+      - name: flows
+        mountPath: /app/flows
+        readOnly: false
+      - name: tmp
+        mountPath: /tmp
+        readOnly: false
+      - name: data
+        mountPath: /app/data
+        readOnly: false
+      - name: db
+        mountPath: /app/db
+        readOnly: false
 
     sqlite:
       enabled: true
@@ -141,9 +183,9 @@ langflow:
       type: ClusterIP
       port: 8080
     image:
-      repository: langflowai/langflow-frontend
-      pullPolicy: IfNotPresent
-      tag: ""
+      repository: jordanrfrazier/lfopenshift-frontend
+      imagePullPolicy: Always
+      tag: "v1.7"
     resources:
       requests:
         cpu: 0.3
@@ -162,14 +204,15 @@ langflow:
 
     affinity: {}
     podAnnotations: {}
-    podSecurityContext: {}
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+
+    volumes:
+      - name: tmp
+        emptyDir: {}
+
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+        readOnly: false
 
 secretProvider:
   enabled: false

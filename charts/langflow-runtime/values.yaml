@@ -1,9 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: "langflowai/langflow-backend"
-  pullPolicy: IfNotPresent
-  tag: ""
+  # repository: "langflowai/langflow-ep"
+  repository: "jordanrfrazier/lfopenshift"
+  pullPolicy: Always
+  tag: "v1.1"
 
 downloadFlows:
   path: /app/flows
@@ -31,19 +32,28 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsNonRoot: true
+  runAsGroup: 1000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsUser: 1000
+  runAsNonRoot: true
+  runAsGroup: 1000
+
 env:
   - name: LANGFLOW_LOG_LEVEL
     value: "INFO"
+  - name: LANGFLOW_DATABASE_URL
+    value: "sqlite:////app/db/langflow.db"
 #  - name: OPENAI_API_KEY
 #    valueFrom:
 #      secretKeyRef:
@@ -92,17 +102,29 @@ readinessProbe:
     path: /api/v1/version
     port: http
 
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+volumes:
+  - name: flows
+    emptyDir: {}
+  - name: tmp
+    emptyDir: {}
+  - name: data
+    emptyDir: {}
+  - name: db
+    emptyDir: {}
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: flows
+    mountPath: /app/flows
+    readOnly: false
+  - name: tmp
+    mountPath: /tmp
+    readOnly: false
+  - name: data
+    mountPath: /app/data
+    readOnly: false
+  - name: db
+    mountPath: /app/db
+    readOnly: false
 
 nodeSelector: {}
 
