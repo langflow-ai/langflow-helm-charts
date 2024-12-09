@@ -56,8 +56,8 @@ langflow:
     numWorkers: 1
     image:
       repository: jordanrfrazier/lfopenshift
-      imagePullPolicy: Always
-      tag: "v1.1"
+      imagePullPolicy: IfNotPresent
+      tag: "v1.5"
     resources:
       requests:
         cpu: 0.5
@@ -70,7 +70,11 @@ langflow:
       periodSeconds: 10
       timeoutSeconds: 5
       initialDelaySeconds: 5
-    env: []
+    env:
+      - name: LANGFLOW_PORT
+        value: "7860"
+      - name: "LANGFLOW_ALEMBIC_LOG_FILE"
+        value: "/app/db/alembic.log"
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -184,7 +188,7 @@ langflow:
       port: 8080
     image:
       repository: jordanrfrazier/lfopenshift-frontend
-      imagePullPolicy: Always
+      imagePullPolicy: IfNotPresent
       tag: "v1.7"
     resources:
       requests:

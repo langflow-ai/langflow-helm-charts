@@ -50,6 +50,8 @@ securityContext:
   runAsGroup: 1000
 
 env:
+  - name: LANGFLOW_PORT
+    value: "7860"
   - name: LANGFLOW_LOG_LEVEL
     value: "INFO"
   - name: LANGFLOW_DATABASE_URL
