@@ -37,6 +37,8 @@ langflow:
       pullPolicy: IfNotPresent
       tag: ""
   backend:
+    alembicLogFile: "/tmp/alembic.log"
+    logFile: "/tmp/langflow.log"
     replicaCount: 1
     service:
       type: ClusterIP
@@ -44,9 +46,9 @@ langflow:
     backendOnly: true
     numWorkers: 1
     image:
-      repository: langflowai/langflow-backend
+      repository: langflowai/langflow-ep
       pullPolicy: IfNotPresent
-      tag: ""
+      tag: "v1.1.1.dev8"
     resources:
       requests:
         cpu: 0.5
@@ -71,19 +73,20 @@ langflow:
       prometheus.io/port: "9090"
       prometheus.io/path: "/metrics"
 
-    securityContext:  # Container-specific security context
+    containerSecurityContext:  # Container-specific security context
       capabilities:
         drop:
           - ALL
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
       runAsNonRoot: true
-      runAsUser: 1000740000
+      #runAsUser: 1000730001
       seccompProfile:
         type: RuntimeDefault
 
     podSecurityContext:
-      fsGroup: 1000740000
+      #fsGroup: 1000730001
+      #fsGroup: 1000  # This will make the mounted volume readable by group 1000
       runAsNonRoot: true
       seccompProfile:
         type: RuntimeDefault
@@ -149,9 +152,9 @@ langflow:
       type: ClusterIP
       port: 8080
     image:
-      repository: langflowai/langflow-frontend
+      repository: langflowai/langflow-ep # devingbost/langflowlocalfrontend #langflowai/langflow-frontend
       pullPolicy: IfNotPresent
-      tag: ""
+      tag: "v1.1.1.dev8"
     resources:
       requests:
         cpu: 0.3
@@ -177,12 +180,12 @@ langflow:
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
       runAsNonRoot: true
-      runAsUser: 1000740000
+      #runAsUser: 1000730001
       seccompProfile:
         type: RuntimeDefault
 
     podSecurityContext:
-      fsGroup: 1000740000
+      #fsGroup: 1000730001
       runAsNonRoot: true
       seccompProfile:
         type: RuntimeDefault

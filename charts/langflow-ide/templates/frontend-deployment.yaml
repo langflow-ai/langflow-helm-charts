@@ -42,6 +42,10 @@ spec:
             items:
               - key: default.conf
                 path: default.conf
+        - name: tmp-dir
+          emptyDir: {}
+        - name: cache-dir
+          emptyDir: {}
         {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
           csi:
@@ -69,6 +73,12 @@ spec:
               mountPath: "/mnt/secrets"
               readOnly: true
             {{- end }}
+            - name: tmp-dir
+              mountPath: /tmp
+              # Specify subPath if only a subdirectory of /tmp is needed
+            - name: cache-dir
+              mountPath: /.cache
+              # Specify subPath if only a subdirectory of /tmp is needed
           livenessProbe:
             httpGet:
               path: /index.html

@@ -51,7 +51,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.langflow.backend.securityContext | nindent 12 }}
+            {{- toYaml .Values.langflow.backend.containerSecurityContext | nindent 12 }}
           image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag  | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.langflow.backend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
           command: ["/bin/bash", "-c"]
@@ -101,10 +101,16 @@ spec:
             timeoutSeconds: {{ .Values.langflow.backend.probe.timeoutSeconds }}
             failureThreshold: {{ .Values.langflow.backend.probe.failureThreshold }}   
           env:
+            - name: COLUMNS
+              value: "200"
             - name: LANGFLOW_BACKEND_ONLY
               value: "{{ .Values.langflow.backend.backendOnly }}"
             - name: LANGFLOW_NUM_WORKERS
               value: "{{ .Values.langflow.backend.numWorkers }}"
+            - name: ALEMBIC_LOG_FILE
+              value: "{{ .Values.langflow.backend.alembicLogFile }}"
+            - name: LOG_FILE
+              value: "{{ .Values.langflow.backend.logFile }}"
             {{- if .Values.langflow.backend.sqlite.enabled }}
             - name: LANGFLOW_DATABASE_URL
               value: "sqlite:////data/langflow.db"
