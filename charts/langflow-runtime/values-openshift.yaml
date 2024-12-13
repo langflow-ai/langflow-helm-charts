@@ -110,10 +110,6 @@ volumes:
     emptyDir: {}
   - name: db
     emptyDir: {}
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
@@ -129,9 +125,6 @@ volumeMounts:
   - name: db
     mountPath: /app/db
     readOnly: false
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
 
 nodeSelector: {}
 
