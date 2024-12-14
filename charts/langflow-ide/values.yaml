@@ -2,7 +2,12 @@ imagePullSecrets: []
 
 nameOverride: "langflow"
 # Override for the name of the helm deployment
-fullnameOverride: "langflow"
+# TODO: This causes issues during openshift deployment due to openshift appending
+# _PORT to the service name for internal use. Langflow needs `LANGFLOW_PORT` to be set
+# to the port of the service, so we clash. 
+#  We could rename this to langflow-service?
+# https://github.com/langflow-ai/langflow/issues/4330#issuecomment-2459097917
+fullnameOverride: "langflow" 
 
 serviceAccount:
   # Specifies whether a service account should be created
