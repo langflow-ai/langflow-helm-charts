@@ -1,13 +1,10 @@
 imagePullSecrets: []
 
-nameOverride: "langflow"
+nameOverride: "langflow-service"
 # Override for the name of the helm deployment
-# TODO: This causes issues during openshift deployment due to openshift appending
-# _PORT to the service name for internal use. Langflow needs `LANGFLOW_PORT` to be set
-# to the port of the service, so we clash. 
-#  We could rename this to langflow-service?
+# Note: using `langflow` as service name causes env var collision when deploying on openshift
 # https://github.com/langflow-ai/langflow/issues/4330#issuecomment-2459097917
-fullnameOverride: "langflow" 
+fullnameOverride: "langflow-service" 
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -60,9 +57,9 @@ langflow:
     backendOnly: true
     numWorkers: 1
     image:
-      repository: jordanrfrazier/lfopenshift
+      repository: langflowai/langflow
       imagePullPolicy: IfNotPresent
-      tag: "v1.5"
+    command: ["python", "-m", "langflow", "run", "--host", "0.0.0.0", "--backend-only"]
     resources:
       requests:
         cpu: 0.5
@@ -192,9 +189,8 @@ langflow:
       type: ClusterIP
       port: 8080
     image:
-      repository: jordanrfrazier/lfopenshift-frontend
+      repository: langflowai/langflow-frontend
       imagePullPolicy: IfNotPresent
-      tag: "v1.7"
     resources:
       requests:
         cpu: 0.3

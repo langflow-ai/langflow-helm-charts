@@ -1,8 +1,7 @@
 replicaCount: 1
 
 image:
-  # repository: "langflowai/langflow-ep"
-  repository: "jordanrfrazier/lfopenshift"
+  repository: "langflowai/langflow"
   pullPolicy: Always
   tag: "v1.1"
 
