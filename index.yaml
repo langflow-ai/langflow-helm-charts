@@ -3,6 +3,24 @@ entries:
   langflow-ide:
   - apiVersion: v2
     appVersion: latest
+    created: "2025-01-24T18:58:36.967215787Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.x
+    description: Helm chart for Langflow IDE
+    digest: c0fe62c4c146b46f6648df28a3094c5ad01ceb31bdea5adfc7713b508cf55866
+    maintainers:
+    - email: contact@langflow.org
+      name: Langflow
+    name: langflow-ide
+    type: application
+    urls:
+    - https://github.com/langflow-ai/langflow-helm-charts/releases/download/langflow-ide-0.1.1/langflow-ide-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: latest
     created: "2024-07-23T12:34:32.06929579Z"
     dependencies:
     - condition: postgresql.enabled
@@ -37,6 +55,19 @@ entries:
   langflow-runtime:
   - apiVersion: v2
     appVersion: latest
+    created: "2025-01-24T18:58:37.099435461Z"
+    description: A helm chart for running LangFlow flows as a service
+    digest: d83f504a4af33e00eae8c474e677d9dbabab3a8dba9846576064eacacaaa373b
+    maintainers:
+    - email: contact@langflow.org
+      name: Langflow
+    name: langflow-runtime
+    type: application
+    urls:
+    - https://github.com/langflow-ai/langflow-helm-charts/releases/download/langflow-runtime-0.1.1/langflow-runtime-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: latest
     created: "2024-07-23T12:34:32.203422668Z"
     description: A helm chart for running LangFlow flows as a service
     digest: a30f857de8e37a7232457a724b1ad8116132544f3c8001cabcff9633a5359360
@@ -58,4 +89,4 @@ entries:
     urls:
     - https://github.com/langflow-ai/langflow-helm-charts/releases/download/langflow-runtime-0.0.1/langflow-runtime-0.0.1.tgz
     version: 0.0.1
-generated: "2024-07-23T12:34:32.203438807Z"
+generated: "2025-01-24T18:58:37.099454095Z"
