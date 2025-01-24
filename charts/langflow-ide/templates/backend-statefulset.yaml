@@ -34,22 +34,25 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "langflow.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.langflow.backend.podSecurityContext | nindent 8 }}
-      {{- if .Values.secretProvider.enabled }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
+        {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
           csi:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
               secretProviderClass: "{{- .Values.secretProvider.name }}"
-      {{- end }}
+        {{- end }}
+        {{- with .Values.langflow.backend.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.langflow.backend.securityContext | nindent 12 }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag  | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.langflow.backend.image.pullPolicy | default .Values.langflow.global.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.langflow.backend.image.imagePullPolicy | default .Values.langflow.global.image.imagePullPolicy }}
           command: ["/bin/bash", "-c"]
           args:
             - >
@@ -65,9 +68,8 @@ spec:
             - name: http
               containerPort: {{ .Values.langflow.backend.service.port }}
               protocol: TCP
-          {{- if or .Values.secretProvider.enabled .Values.langflow.backend.sqlite.enabled }}
+          {{- if or .Values.secretProvider.enabled .Values.langflow.backend.sqlite.enabled .Values.langflow.backend.volumeMounts }}
           volumeMounts:
-          {{- end }}
             {{- if .Values.secretProvider.enabled }}
             - name: secrets-store-inline
               mountPath: "/mnt/secrets"
@@ -77,6 +79,10 @@ spec:
             - name: data
               mountPath: /data
             {{- end }}
+            {{- with .Values.langflow.backend.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /health

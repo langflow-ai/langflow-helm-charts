@@ -1,8 +1,11 @@
 imagePullSecrets: []
 
-nameOverride: "langflow"
+nameOverride: "langflow-service"
 # Override for the name of the helm deployment
-fullnameOverride: "langflow"
+# Note: using `langflow` as service name causes
+# env var collision when deploying on openshift
+# https://github.com/langflow-ai/langflow/issues/4330#issuecomment-2459097917
+fullnameOverride: "langflow-service"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -10,7 +13,8 @@ serviceAccount:
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set and create is true, a name is generated using the
+  # fullname template
   name: ""
 
 ingress:
@@ -26,11 +30,27 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  allowPrivilegeEscalation: false
+  runAsGroup: 1000
+
+podSecurityContext:
+  fsGroup: 1000
+  runAsUser: 1000
+  runAsNonRoot: true
+  runAsGroup: 1000
+
+
 langflow:
   global:
     image:
-      pullPolicy: IfNotPresent
-      tag: ""
+      tag: "latest"
   backend:
     replicaCount: 1
     service:
@@ -39,9 +59,17 @@ langflow:
     backendOnly: true
     numWorkers: 1
     image:
-      repository: langflowai/langflow-backend
-      pullPolicy: IfNotPresent
-      tag: ""
+      repository: langflowai/langflow
+      imagePullPolicy: IfNotPresent
+      tag: latest
+    command:
+      - python
+      - -m
+      - langflow
+      - run
+      - --host
+      - 0.0.0.0
+      - --backend-only
     resources:
       requests:
         cpu: 0.5
@@ -54,42 +82,75 @@ langflow:
       periodSeconds: 10
       timeoutSeconds: 5
       initialDelaySeconds: 5
-    env: []
+    env:
+      - name: LANGFLOW_PORT
+        value: "7860"
+      - name: LANGFLOW_ALEMBIC_LOG_FILE
+        value: "/app/db/alembic.log"
+      - name: LANGFLOW_UPDATE_STARTER_PROJECTS
+        value: "false"
     nodeSelector: {}
-
-
     tolerations: []
-
     affinity: {}
     podAnnotations:
       prometheus.io/scrape: "true"
-      prometheus.io/port: "9090"
+      prometheus.io/port: 9090
       prometheus.io/path: "/metrics"
 
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    securityContext:
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      allowPrivilegeEscalation: false
+      runAsGroup: 1000
 
-    podSecurityContext: {}
+    podSecurityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+      runAsNonRoot: true
+      runAsGroup: 1000
 
     externalDatabase:
-      # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
+      # Compose in the SQLAlchemy format:
+      # https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
       enabled: false
       driver: {}
         # value: "postgresql"
       port: {}
       user: {}
       password: {}
-        # valueFrom:                                                                                                                                                                                                                   │
-        #   secretKeyRef:                                                                                                                                                                                                              │
-        #    key: password                                                                                                                                                                                                            │
+        # valueFrom:
+        #   secretKeyRef:
+        #    key: password
         #    name: <secret-name>
       database: {}
 
+    volumes:
+      - name: flows
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      - name: data
+        emptyDir: {}
+      - name: db
+        emptyDir: {}
+
+    volumeMounts:
+      - name: flows
+        mountPath: /app/flows
+        readOnly: false
+      - name: tmp
+        mountPath: /tmp
+        readOnly: false
+      - name: data
+        mountPath: /app/data
+        readOnly: false
+      - name: db
+        mountPath: /app/db
+        readOnly: false
 
     sqlite:
       enabled: true
@@ -133,7 +194,7 @@ langflow:
     # superuserPassword: <superuser password>
     # secretKey: <encryption key, optional>
     # newUserIsActive: true|false
-    
+
   frontend:
     enabled: true
     replicaCount: 1
@@ -142,8 +203,8 @@ langflow:
       port: 8080
     image:
       repository: langflowai/langflow-frontend
-      pullPolicy: IfNotPresent
-      tag: ""
+      imagePullPolicy: IfNotPresent
+      tag: latest
     resources:
       requests:
         cpu: 0.3
@@ -162,14 +223,15 @@ langflow:
 
     affinity: {}
     podAnnotations: {}
-    podSecurityContext: {}
-    securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+
+    volumes:
+      - name: tmp
+        emptyDir: {}
+
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+        readOnly: false
 
 secretProvider:
   enabled: false

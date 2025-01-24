@@ -1,0 +1,19 @@
+{{- $openshift := .Capabilities.APIVersions.Has "security.openshift.io/v1" -}}
+{{- if .Values.serviceAccount.create -}}
+{{- if $openshift -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "langflow.fullname" . }}-openshift-scc
+  labels:
+    {{- include "langflow.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "langflow.fullname" . }}-openshift-scc
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "langflow.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end -}}
+{{- end -}}
