@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: "langflowai/langflow"
   pullPolicy: Always
-  tag: "v1.1"
+  tag: latest
 
 downloadFlows:
   path: /app/flows
@@ -55,6 +55,10 @@ env:
     value: "INFO"
   - name: LANGFLOW_DATABASE_URL
     value: "sqlite:////app/db/langflow.db"
+  - name: LANGFLOW_ALEMBIC_LOG_FILE
+    value: "/app/db/alembic.log"
+  - name: LANGFLOW_UPDATE_STARTER_PROJECTS
+    value: "false"
 #  - name: OPENAI_API_KEY
 #    valueFrom:
 #      secretKeyRef:

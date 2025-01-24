@@ -59,6 +59,7 @@ langflow:
     image:
       repository: langflowai/langflow
       imagePullPolicy: IfNotPresent
+      tag: latest
     command: ["python", "-m", "langflow", "run", "--host", "0.0.0.0", "--backend-only"]
     resources:
       requests:
@@ -75,8 +76,10 @@ langflow:
     env:
       - name: LANGFLOW_PORT
         value: "7860"
-      - name: "LANGFLOW_ALEMBIC_LOG_FILE"
+      - name: LANGFLOW_ALEMBIC_LOG_FILE
         value: "/app/db/alembic.log"
+      - name: LANGFLOW_UPDATE_STARTER_PROJECTS
+        value: "false"
     nodeSelector: {}
     tolerations: []
     affinity: {}
@@ -191,6 +194,7 @@ langflow:
     image:
       repository: langflowai/langflow-frontend
       imagePullPolicy: IfNotPresent
+      tag: latest
     resources:
       requests:
         cpu: 0.3
