@@ -2,7 +2,7 @@ apiVersion: v2
 name: langflow-runtime
 description: A helm chart for running LangFlow flows as a service
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: latest
 maintainers:
   - name: Langflow
