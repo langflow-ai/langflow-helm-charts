@@ -2,9 +2,10 @@ imagePullSecrets: []
 
 nameOverride: "langflow-service"
 # Override for the name of the helm deployment
-# Note: using `langflow` as service name causes env var collision when deploying on openshift
+# Note: using `langflow` as service name causes
+# env var collision when deploying on openshift
 # https://github.com/langflow-ai/langflow/issues/4330#issuecomment-2459097917
-fullnameOverride: "langflow-service" 
+fullnameOverride: "langflow-service"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -12,7 +13,8 @@ serviceAccount:
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set and create is true, a name is generated using the
+  # fullname template
   name: ""
 
 ingress:
@@ -48,7 +50,7 @@ podSecurityContext:
 langflow:
   global:
     image:
-      tag: "latest" 
+      tag: "latest"
   backend:
     replicaCount: 1
     service:
@@ -60,7 +62,14 @@ langflow:
       repository: langflowai/langflow
       imagePullPolicy: IfNotPresent
       tag: latest
-    command: ["python", "-m", "langflow", "run", "--host", "0.0.0.0", "--backend-only"]
+    command:
+      - python
+      - -m
+      - langflow
+      - run
+      - --host
+      - 0.0.0.0
+      - --backend-only
     resources:
       requests:
         cpu: 0.5
@@ -91,7 +100,7 @@ langflow:
     securityContext:
       capabilities:
         drop:
-        - ALL
+          - ALL
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
@@ -105,16 +114,17 @@ langflow:
       runAsGroup: 1000
 
     externalDatabase:
-      # Compose in the SQLAlchemy format: https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
+      # Compose in the SQLAlchemy format:
+      # https://docs.sqlalchemy.org/en/20/core/engines.html#database-urls
       enabled: false
       driver: {}
         # value: "postgresql"
       port: {}
       user: {}
       password: {}
-        # valueFrom:                                                                                                                                                                                                                   │
-        #   secretKeyRef:                                                                                                                                                                                                              │
-        #    key: password                                                                                                                                                                                                            │
+        # valueFrom:
+        #   secretKeyRef:
+        #    key: password
         #    name: <secret-name>
       database: {}
 
@@ -184,7 +194,7 @@ langflow:
     # superuserPassword: <superuser password>
     # secretKey: <encryption key, optional>
     # newUserIsActive: true|false
-    
+
   frontend:
     enabled: true
     replicaCount: 1

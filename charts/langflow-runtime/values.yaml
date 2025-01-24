@@ -41,7 +41,7 @@ securityContext:
   allowPrivilegeEscalation: false
   capabilities:
     drop:
-    - ALL
+      - ALL
   privileged: false
   readOnlyRootFilesystem: true
   runAsUser: 1000
