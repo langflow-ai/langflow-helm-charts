@@ -7,6 +7,8 @@ nameOverride: "langflow-service"
 # https://github.com/langflow-ai/langflow/issues/4330#issuecomment-2459097917
 fullnameOverride: "langflow-service"
 
+clusterDomain: cluster.local
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

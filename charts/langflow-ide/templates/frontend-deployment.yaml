@@ -95,7 +95,7 @@ spec:
             failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}   
           env:
             - name: BACKEND_URL
-              value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.service.port }}"
+              value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.langflow.backend.service.port }}"
             - name: FRONTEND_PORT
               value: "{{ .Values.langflow.frontend.service.port }}"
           resources:
