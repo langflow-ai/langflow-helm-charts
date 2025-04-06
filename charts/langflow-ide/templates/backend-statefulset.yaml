@@ -53,17 +53,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag  | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.langflow.backend.image.imagePullPolicy | default .Values.langflow.global.image.imagePullPolicy }}
-          command: ["/bin/bash", "-c"]
-          args:
-            - >
-              set -e &&
-              if [ -n "$LF_CHART_EXTERNALDB_DRIVER" ]; then
-                echo "LF_CHART_EXTERNALDB_DRIVER is set, using external database at $LF_CHART_EXTERNALDB_HOST" &&
-                export LANGFLOW_DATABASE_URL="$LF_CHART_EXTERNALDB_DRIVER://$LF_CHART_EXTERNALDB_USER:$LF_CHART_EXTERNALDB_PASSWORD@$LF_CHART_EXTERNALDB_HOST:$LF_CHART_EXTERNALDB_PORT/$LF_CHART_EXTERNALDB_DATABASE"
-              else
-                echo "LF_CHART_EXTERNALDB_DRIVER is not set, using SQLLite database"
-              fi &&
-              langflow run --host 0.0.0.0 --port {{ .Values.langflow.backend.service.port }}
+          command: {{ .Values.langflow.backend.command }}
           ports:
             - name: http
               containerPort: {{ .Values.langflow.backend.service.port }}
