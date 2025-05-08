@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "langflow-runtime.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "langflow-runtime.labels" . | nindent 4 }}
 spec:
