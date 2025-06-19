@@ -78,10 +78,16 @@ langflow:
       #   cpu: 0.5
       #   memory: 1Gi
     probe:
-      failureThreshold: 3
-      periodSeconds: 10
-      timeoutSeconds: 5
-      initialDelaySeconds: 5
+      readiness:
+        failureThreshold: 3
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds: 5
+      liveness:
+        failureThreshold: 3
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds: 5
     env:
       - name: LANGFLOW_PORT
         value: "7860"
@@ -213,10 +219,17 @@ langflow:
       #   cpu: 0.3
       #   memory: 512Mi
     probe:
-      failureThreshold: 3
-      periodSeconds: 10
-      timeoutSeconds: 5
-      initialDelaySeconds: 5
+      readiness:
+        failureThreshold: 3
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds: 5
+      liveness:
+        failureThreshold: 3
+        periodSeconds: 10
+        timeoutSeconds: 5
+        initialDelaySeconds: 5
+
     nodeSelector: {}
 
     tolerations: []
