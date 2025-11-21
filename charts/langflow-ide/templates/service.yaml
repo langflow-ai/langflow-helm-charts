@@ -34,6 +34,12 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    {{- if .Values.langflow.backend.prometheus.enabled }}
+    - port: {{ .Values.langflow.backend.prometheus.port }}
+      targetPort: prometheus
+      protocol: TCP
+      name: prometheus
+    {{- end }}
   selector:
     app: {{ template "langflow.name" . }}
     chart: {{ template "langflow.chart" . }}

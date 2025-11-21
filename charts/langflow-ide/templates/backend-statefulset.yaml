@@ -68,6 +68,11 @@ spec:
             - name: http
               containerPort: {{ .Values.langflow.backend.service.port }}
               protocol: TCP
+            {{- if .Values.langflow.backend.prometheus.enabled }}
+            - name: prometheus
+              containerPort: {{ .Values.langflow.backend.prometheus.port }}
+              protocol: TCP
+            {{- end }}
           {{- if or .Values.secretProvider.enabled .Values.langflow.backend.sqlite.enabled .Values.langflow.backend.volumeMounts }}
           volumeMounts:
             {{- if .Values.secretProvider.enabled }}
@@ -108,6 +113,12 @@ spec:
             {{- if .Values.langflow.backend.sqlite.enabled }}
             - name: LANGFLOW_DATABASE_URL
               value: "sqlite:////data/langflow.db"
+            {{- end }}
+            {{- if .Values.langflow.backend.prometheus.enabled }}
+            - name: LANGFLOW_PROMETHEUS_ENABLED
+              value: "true"
+            - name: LANGFLOW_PROMETHEUS_PORT
+              value: "{{ .Values.langflow.backend.prometheus.port }}"
             {{- end }}
             {{- with .Values.langflow.backend.env }}
             {{- toYaml . | nindent 12 }}

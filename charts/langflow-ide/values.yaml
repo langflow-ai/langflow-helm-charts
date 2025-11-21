@@ -89,6 +89,9 @@ langflow:
         value: "/app/db/alembic.log"
       - name: LANGFLOW_UPDATE_STARTER_PROJECTS
         value: "false"
+    prometheus:
+      enabled: false
+      port: 9090
     nodeSelector: {}
     tolerations: []
     affinity: {}
