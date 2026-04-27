@@ -119,6 +119,7 @@ langflow:
       enabled: false
       driver: {}
         # value: "postgresql"
+      host: {}
       port: {}
       user: {}
       password: {}
