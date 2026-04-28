@@ -94,6 +94,9 @@ spec:
             timeoutSeconds: {{ .Values.langflow.frontend.probe.timeoutSeconds }}
             failureThreshold: {{ .Values.langflow.frontend.probe.failureThreshold }}   
           env:
+            {{with .Values.langflow.frontend.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
             - name: BACKEND_URL
               value: "http://{{ template "langflow.fullname" . }}-backend.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.langflow.backend.service.port }}"
             - name: FRONTEND_PORT

@@ -25,5 +25,10 @@ langflow:
           secretKeyRef:
             key: "password"
             name: "langflow-ide-postgresql-service"
+    frontend:
+      env: 
+        - name: LANGFLOW_MAX_FILE_SIZE_UPLOAD
+          value: "100"
+
     sqlite:
       enabled: false
