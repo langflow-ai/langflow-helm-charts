@@ -129,15 +129,24 @@ spec:
             {{- if and (hasKey .Values.langflow.backend "autoLogin") (eq .Values.langflow.backend.autoLogin false) }}
             - name: LANGFLOW_AUTO_LOGIN
               value: "{{ .Values.langflow.backend.autoLogin | default "False" }}"
-            - name: LANGFLOW_SUPERUSER
+              {{- if not (include "envHasName" (list .Values.langflow.backend.env "LANGFLOW_SUPERUSER")) }}
+              - name: LANGFLOW_SUPERUSER
               value: "{{ .Values.langflow.backend.superuser | default "admin" }}"
-            - name: LANGFLOW_SUPERUSER_PASSWORD
+              {{- end }}
+              {{- if not (include "envHasName" (list .Values.langflow.backend.env "LANGFLOW_SUPERUSER_PASSWORD")) }}
+              - name: LANGFLOW_SUPERUSER_PASSWORD
               value: "{{ .Values.langflow.backend.superuserPassword | default (randAlphaNum 32) }}"
-            - name: LANGFLOW_SECRET_KEY
+              {{- end }}
+              {{- if not (include "envHasName" (list .Values.langflow.backend.env "LANGFLOW_SECRET_KEY")) }}
+              - name: LANGFLOW_SECRET_KEY
               value: "{{ .Values.langflow.backend.secretKey | default (randAlphaNum 32) }}"
-            - name: LANGFLOW_NEW_USER_IS_ACTIVE
+              {{- end }}
+              {{- if not (include "envHasName" (list .Values.langflow.backend.env "LANGFLOW_NEW_USER_IS_ACTIVE")) }}
+              - name: LANGFLOW_NEW_USER_IS_ACTIVE
               value: "{{ .Values.langflow.backend.newUserIsActive | default "False" }}"
+              {{- end }}
             {{- end }}
+
           resources:
             {{- toYaml .Values.langflow.backend.resources | nindent 12 }}
       {{- with .Values.langflow.backend.nodeSelector }}

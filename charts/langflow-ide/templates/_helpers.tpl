@@ -60,3 +60,18 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Checks if a given environment variable name exists in a list of environment variables
+*/}}
+{{- define "envHasName" -}}
+  {{- $envList := index . 0 -}}
+  {{- $name := index . 1 -}}
+  {{- $found := false -}}
+  {{- range $envList }}
+    {{- if eq .name $name }}
+      {{- $found = true -}}
+    {{- end }}
+  {{- end }}
+  {{- $found -}}
+{{- end }}
