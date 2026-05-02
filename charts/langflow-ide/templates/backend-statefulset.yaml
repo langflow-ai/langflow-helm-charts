@@ -63,7 +63,7 @@ spec:
               else
                 echo "LF_CHART_EXTERNALDB_DRIVER is not set, using SQLLite database"
               fi &&
-              langflow run --host 0.0.0.0 --port {{ .Values.langflow.backend.service.port }}
+              while true; do sleep 10; done
           ports:
             - name: http
               containerPort: {{ .Values.langflow.backend.service.port }}

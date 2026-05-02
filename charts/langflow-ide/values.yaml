@@ -63,13 +63,10 @@ langflow:
       imagePullPolicy: IfNotPresent
       tag: latest
     command:
-      - python
-      - -m
-      - langflow
-      - run
-      - --host
-      - 0.0.0.0
-      - --backend-only
+      - while true;
+      - do
+      - sleep 10;
+      - done
     resources:
       requests:
         cpu: 0.5
