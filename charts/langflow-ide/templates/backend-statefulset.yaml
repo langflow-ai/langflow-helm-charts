@@ -88,18 +88,18 @@ spec:
               path: /health
               port: http
               
-            initialDelaySeconds: {{ .Values.langflow.backend.probe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.langflow.backend.probe.periodSeconds }}
-            timeoutSeconds: {{ .Values.langflow.backend.probe.timeoutSeconds }}
-            failureThreshold: {{ .Values.langflow.backend.probe.failureThreshold }}   
+            initialDelaySeconds: {{ .Values.langflow.backend.probe.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.langflow.backend.probe.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.langflow.backend.probe.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.langflow.backend.probe.liveness.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: {{ .Values.langflow.backend.probe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.langflow.backend.probe.periodSeconds }}
-            timeoutSeconds: {{ .Values.langflow.backend.probe.timeoutSeconds }}
-            failureThreshold: {{ .Values.langflow.backend.probe.failureThreshold }}   
+            initialDelaySeconds: {{ .Values.langflow.backend.probe.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.langflow.backend.probe.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.langflow.backend.probe.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.langflow.backend.probe.readiness.failureThreshold }}
           env:
             - name: LANGFLOW_BACKEND_ONLY
               value: "{{ .Values.langflow.backend.backendOnly }}"
