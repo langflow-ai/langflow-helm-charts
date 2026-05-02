@@ -138,6 +138,10 @@ spec:
             - name: LANGFLOW_NEW_USER_IS_ACTIVE
               value: "{{ .Values.langflow.backend.newUserIsActive | default "False" }}"
             {{- end }}
+            {{- if .Values.metrics.enabled }}
+            - name: LANGFLOW_PROMETHEUS_ENABLED
+              value: "True"
+            {{- end }}            
           resources:
             {{- toYaml .Values.langflow.backend.resources | nindent 12 }}
       {{- with .Values.langflow.backend.nodeSelector }}

@@ -1,0 +1,23 @@
+{{- if .Values.metrics.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: {{ template "langflow.name" . }}-servicemonitor
+    chart: {{ template "langflow.chart" . }}
+    release: {{ .Release.Name }}
+  name: langflow-service-metrics
+  namespace: monitoring
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app: {{ template "langflow.name" . }}-backend
+      release: {{ .Release.Name }}
+{{- end }}

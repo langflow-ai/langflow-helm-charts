@@ -24,7 +24,7 @@ kind: Service
 metadata:
   name: {{ include "langflow.fullname" . }}-backend
   labels:
-    app: {{ template "langflow.name" . }}
+    app: {{ template "langflow.name" . }}-backend
     chart: {{ template "langflow.chart" . }}
     release: {{ .Release.Name }}
 spec:
@@ -34,6 +34,12 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+{{- if .Values.metrics.enabled }}
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+{{- end }}
   selector:
     app: {{ template "langflow.name" . }}
     chart: {{ template "langflow.chart" . }}
