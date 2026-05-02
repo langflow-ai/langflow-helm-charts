@@ -191,9 +191,21 @@ langflow:
         storageClass: {}
 
     # autoLogin: true|false
-    # superuser: <superuser login>
-    # superuserPassword: <superuser password>
-    # secretKey: <encryption key, optional>
+    # superuser: {}
+        # valueFrom:
+        #   secretKeyRef:
+        #    key: password
+        #    name: <secret-name>
+    # superuserPassword: {}
+        # valueFrom:
+        #   secretKeyRef:
+        #    key: password
+        #    name: <secret-name>
+    # secretKey: {}
+        # valueFrom:
+        #   secretKeyRef:
+        #    key: password
+        #    name: <secret-name>
     # newUserIsActive: true|false
 
   frontend:
