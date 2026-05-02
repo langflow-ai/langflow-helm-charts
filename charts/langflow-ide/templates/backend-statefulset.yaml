@@ -18,7 +18,7 @@ spec:
       langflow-scope: "backend"
   template:
     metadata:
-      {{- with .Values.langflow.podAnnotations }}
+      {{- with .Values.langflow.backend.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
