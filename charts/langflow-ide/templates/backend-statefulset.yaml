@@ -34,7 +34,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "langflow.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.langflow.backend.podSecurityContext | nindent 8 }}
       volumes:
         {{- if .Values.secretProvider.enabled }}
         - name: secrets-store-inline
@@ -50,7 +50,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.langflow.backend.securityContext | nindent 12 }}
           image: "{{ .Values.langflow.backend.image.repository }}:{{ .Values.langflow.backend.image.tag  | default .Values.langflow.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.langflow.backend.image.imagePullPolicy | default .Values.langflow.global.image.imagePullPolicy }}
           command: ["/bin/bash", "-c"]
