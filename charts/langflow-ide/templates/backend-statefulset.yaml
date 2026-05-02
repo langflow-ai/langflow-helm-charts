@@ -108,6 +108,8 @@ spec:
             {{- if .Values.langflow.backend.sqlite.enabled }}
             - name: LANGFLOW_DATABASE_URL
               value: "sqlite:////data/langflow.db"
+            - name: LANGFLOW_PORT
+              value: {{ .Values.langflow.backend.service.port | quote }}
             {{- end }}
             {{- with .Values.langflow.backend.env }}
             {{- toYaml . | nindent 12 }}
