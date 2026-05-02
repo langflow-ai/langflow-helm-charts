@@ -85,7 +85,7 @@ spec:
           {{- end }}
           livenessProbe:
             httpGet:
-              path: /health
+              path: /health_check
               port: http
               
             initialDelaySeconds: {{ .Values.langflow.backend.probe.initialDelaySeconds }}
@@ -94,7 +94,7 @@ spec:
             failureThreshold: {{ .Values.langflow.backend.probe.failureThreshold }}   
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health_check
               port: http
             initialDelaySeconds: {{ .Values.langflow.backend.probe.initialDelaySeconds }}
             periodSeconds: {{ .Values.langflow.backend.probe.periodSeconds }}
