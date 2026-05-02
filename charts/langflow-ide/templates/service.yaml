@@ -6,6 +6,9 @@ metadata:
     app: {{ template "langflow.name" . }}
     chart: {{ template "langflow.chart" . }}
     release: {{ .Release.Name }}
+  {{- with .Values.langflow.frontend.service.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.langflow.frontend.service.type }}
   ports:
@@ -27,6 +30,9 @@ metadata:
     app: {{ template "langflow.name" . }}
     chart: {{ template "langflow.chart" . }}
     release: {{ .Release.Name }}
+  {{- with .Values.langflow.backend.service.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.langflow.backend.service.type }}
   ports:

@@ -65,10 +65,11 @@ env:
 #        name: langflow-secrets
 #        key: openai-key
 
-
 service:
   type: ClusterIP
   port: 7860
+
+  annotations: {}
 
 ingress:
   enabled: false

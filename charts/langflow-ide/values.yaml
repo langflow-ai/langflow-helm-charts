@@ -46,7 +46,6 @@ podSecurityContext:
   runAsNonRoot: true
   runAsGroup: 1000
 
-
 langflow:
   global:
     image:
@@ -56,6 +55,7 @@ langflow:
     service:
       type: ClusterIP
       port: 7860
+      annotations: {}
     backendOnly: true
     numWorkers: 1
     image:
@@ -202,6 +202,7 @@ langflow:
     service:
       type: ClusterIP
       port: 8080
+      annotations: {}
     image:
       repository: langflowai/langflow-frontend
       imagePullPolicy: IfNotPresent
