@@ -11,7 +11,7 @@ docker build -t myuser/langflow-hello-world:1.0.0 .
 docker push myuser/langflow-hello-world:1.0.0
 ```
 
-The use the runtime chart to deploy the application:
+Then use the runtime chart to deploy the application:
 
 ```bash
 helm repo add langflow https://langflow-ai.github.io/langflow-helm-charts
