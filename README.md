@@ -29,5 +29,5 @@ The `runtime` chart is tailored for deploying applications in a production envir
   - Reduced Attack Surface: the runtime environment is configured only include essential components, reducing the attack surface and potential vulnerabilities.
 
 - Resource Allocation
-  - Optimized Resource Usage and cost efficiency: by separating the two, we can allocate resources more effectively. Additionally, each flow can be deployed independenly, providing fine-grained resource control.
+  - Optimized Resource Usage and cost efficiency: by separating the two, we can allocate resources more effectively. Additionally, each flow can be deployed independently, providing fine-grained resource control.
   - Scalability: the runtime environment can be scaled independently based on application load and performance requirements, without affecting the development environment.

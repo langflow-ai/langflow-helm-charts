@@ -17,7 +17,7 @@ downloadFlows:
       endpoint: hello-world
 ```
 
-2. **Packaging the flow as docker image**: You can add a flow from to a docker image based on Langflow runtime and refer to it in the chart.
+2. **Packaging the flow as docker image**: You can add a flow to a docker image based on Langflow runtime and refer to it in the chart.
    See an example in the `apps` directory.
 
 ## Deploy the flow
